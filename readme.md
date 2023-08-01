@@ -120,7 +120,8 @@ BEGIN
 
 END
 ```
-## addColumnToAllTable
+## addColumnToAllTable(**#接受一個參數**)
+![Alt text](image-3.png)
 ```
 BEGIN
     DECLARE var_table_name VARCHAR(255);
@@ -149,7 +150,7 @@ BEGIN
     CLOSE result;
 END
 ```
-![Alt text](image-3.png)
+
 執行結果:
 這個不是錯誤，因為迴圈結束了，所以才有這樣的顯示。
 ![Alt text](image-2.png)
