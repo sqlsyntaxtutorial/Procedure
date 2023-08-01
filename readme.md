@@ -86,26 +86,16 @@ call splitColumnToTable()
 
 
 
-#### DELIMITER 改變預設命令列 statement結語
-
-``delimiter``命令指定了``mysql``直譯器命令列的結束符,預設為``;``
-
-說白了就是告知命令到哪兒結束,可以執行此命令了
-
- 
-
-但一般在儲存過程中會有多個分號,我們並不希望一遇到分號就執行命令,因此可以用delimiter命令指定其他結束符來代替``;``
-
-這個結束符可以自己定義,常用的是``//`` 和 ``$$``
 
 # 一些自己建立的procedure 方便使用
 
-## sql procedure
+## sql procedure(**#接受兩個參數**)
+![Alt text](image-1.png)
 ```
 BEGIN
   DECLARE columnCount INT;
    SET @query = CONCAT(
- 'SELECT COUNT(*) INTO @columnCount FROM INFORMATION_SCHEMA.COLUMNS WHERE `table_name` = \'intlpakabouts\' AND ------`table_schema` = DATABASE() AND `COLUMN_NAME` = \'', column_name, '\';');
+ 'SELECT COUNT(*) INTO @columnCount FROM INFORMATION_SCHEMA.COLUMNS WHERE `table_name` = \'',tb_name,'\' AND ------`table_schema` = DATABASE() AND `COLUMN_NAME` = \'', column_name, '\';');
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
@@ -121,7 +111,7 @@ BEGIN
 --   If the column does not exist, add it to the table
  IF @columnCount = 0 THEN
         SET @alterQuery = CONCAT(
-            'ALTER TABLE `intlpakabouts` ADD `', column_name, '` VARCHAR(191) NULL DEFAULT NULL;'
+            'ALTER TABLE `',tb_name,'` ADD `', column_name, '` VARCHAR(191) NULL DEFAULT NULL;'
         );
         PREPARE alterStmt FROM  @alterQuery;
         EXECUTE alterStmt;
