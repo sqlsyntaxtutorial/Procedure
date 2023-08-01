@@ -97,3 +97,38 @@ call splitColumnToTable()
 但一般在儲存過程中會有多個分號,我們並不希望一遇到分號就執行命令,因此可以用delimiter命令指定其他結束符來代替``;``
 
 這個結束符可以自己定義,常用的是``//`` 和 ``$$``
+
+# 一些自己建立的procedure 方便使用
+
+## sql procedure
+```
+BEGIN
+  DECLARE columnCount INT;
+   SET @query = CONCAT(
+ 'SELECT COUNT(*) INTO @columnCount FROM INFORMATION_SCHEMA.COLUMNS WHERE `table_name` = \'intlpakabouts\' AND ------`table_schema` = DATABASE() AND `COLUMN_NAME` = \'', column_name, '\';');
+    PREPARE stmt FROM @query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
+--    SET @resultQuery=CONCAT('SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+--     	WHERE `table_name` = \'intlpakabouts\'
+--      AND `table_schema` = DATABASE()
+--        AND `COLUMN_NAME` = \'',column_name,'\';');
+--     PREPARE stmt FROM @resultQuery;
+--      EXECUTE stmt;
+--      DEALLOCATE PREPARE stmt;
+
+--   If the column does not exist, add it to the table
+ IF @columnCount = 0 THEN
+        SET @alterQuery = CONCAT(
+            'ALTER TABLE `intlpakabouts` ADD `', column_name, '` VARCHAR(191) NULL DEFAULT NULL;'
+        );
+        PREPARE alterStmt FROM  @alterQuery;
+        EXECUTE alterStmt;
+        DEALLOCATE PREPARE alterStmt;
+  END IF;
+
+END
+```
+
+
