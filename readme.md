@@ -4,7 +4,7 @@
 <?php
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStringSplit extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -95,7 +95,7 @@ call splitColumnToTable()
 BEGIN
   DECLARE columnCount INT;
    SET @query = CONCAT(
- 'SELECT COUNT(*) INTO @columnCount FROM INFORMATION_SCHEMA.COLUMNS WHERE `table_name` = \'',tb_name,'\' AND ------`table_schema` = DATABASE() AND `COLUMN_NAME` = \'', column_name, '\';');
+ 'SELECT COUNT(*) INTO @columnCount FROM INFORMATION_SCHEMA.COLUMNS WHERE `table_name` = \'',tb_name,'\' AND `table_schema` = DATABASE() AND `COLUMN_NAME` = \'', column_name, '\';');
     PREPARE stmt FROM @query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
